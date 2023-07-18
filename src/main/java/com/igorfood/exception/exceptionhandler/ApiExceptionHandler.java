@@ -6,8 +6,13 @@ import com.igorfood.exception.EntidadeEmUsoException;
 import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.exception.NegocioException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -15,6 +20,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -58,6 +66,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 + "com o administrador do sistema.";
         ex.printStackTrace();
         Erro erro = createErroBuilder(status,ErroType.ERRO_DE_SISTEMA,detail).build();
+        return handleExceptionInternal(ex,erro,new HttpHeaders(),status,request);
+    }
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto";
+        BindingResult bindingResult = ex.getBindingResult();
+        List<Erro.Field> erroField = bindingResult.getFieldErrors().stream()
+                                        .map(fieldError ->{
+                                                String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+                                                return Erro.Field.builder()
+                                                    .name(fieldError.getField())
+                                                    .userMessage(message)
+                                                    .build();
+                                        })
+                                        .collect(Collectors.toList());
+        Erro erro = createErroBuilder((HttpStatus) status,ErroType.DADOS_INVALIDDOS,detail).timestamp(LocalDateTime.now()).fields(erroField).build();
         return handleExceptionInternal(ex,erro,new HttpHeaders(),status,request);
     }
 

@@ -4,6 +4,7 @@ import com.igorfood.domain.model.Cozinha;
 import com.igorfood.exception.EntidadeEmUsoException;
 import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.services.CozinhaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class CozinhaController {
     }
 
     @PostMapping
-    public ResponseEntity<Cozinha> criaCozinha(@RequestBody Cozinha cozinha){
+    public ResponseEntity<Cozinha> criaCozinha(@RequestBody @Valid Cozinha cozinha){
         return ResponseEntity.status(HttpStatus.CREATED).body(cozinhaService.salvar(cozinha));
     }
 
