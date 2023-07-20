@@ -1,6 +1,8 @@
 package com.igorfood.controller;
 
 import com.igorfood.domain.model.Cozinha;
+import com.igorfood.dtos.CozinhaDTO;
+import com.igorfood.dtos.input.CozinhaInput;
 import com.igorfood.exception.EntidadeEmUsoException;
 import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.services.CozinhaService;
@@ -30,12 +32,12 @@ public class CozinhaController {
     }
 
     @PostMapping
-    public ResponseEntity<Cozinha> criaCozinha(@RequestBody @Valid Cozinha cozinha){
+    public ResponseEntity<CozinhaDTO> criaCozinha(@RequestBody @Valid CozinhaInput cozinha){
         return ResponseEntity.status(HttpStatus.CREATED).body(cozinhaService.salvar(cozinha));
     }
 
     @GetMapping
-    public ResponseEntity<List<Cozinha>> listarCozinhas(){
+    public ResponseEntity<List<CozinhaDTO>> listarCozinhas(){
             return ResponseEntity.status(HttpStatus.OK).body(cozinhaService.listar());
     }
 

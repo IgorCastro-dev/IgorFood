@@ -1,5 +1,6 @@
 package com.igorfood.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.igorfood.Groups;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ public class Cidade {
     @Column(nullable = false)
     private String nome;
 
+    @JsonIgnoreProperties(value = "nome",allowGetters = true)
     @Valid
     @ConvertGroup(from = Default.class,to = Groups.EstadoId.class)
     @NotNull

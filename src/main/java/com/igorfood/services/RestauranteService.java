@@ -5,14 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.igorfood.domain.model.Cozinha;
 import com.igorfood.domain.model.Restaurante;
 import com.igorfood.domain.repository.RestauranteRepository;
-import com.igorfood.exception.CozinhaNaoEncontradaException;
-import com.igorfood.exception.EntidadeNaoEncontradaException;
-import com.igorfood.exception.NegocioException;
-import com.igorfood.exception.RestauranteNaoEncontradoException;
+import com.igorfood.dtos.RestauranteDTO;
+import com.igorfood.dtos.input.RestauranteInput;
+import com.igorfood.exception.*;
+import jakarta.transaction.Transactional;
 import org.flywaydb.core.internal.util.ExceptionUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -20,6 +22,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class RestauranteService {
@@ -30,48 +33,83 @@ public class RestauranteService {
     @Autowired
     private RestauranteRepository resturanteRepository;
 
-    public List<Restaurante> listar(){
-        return resturanteRepository.findAll();
+    @Autowired
+    private ModelMapper modelMapper;
+
+    private static final String MSG_ESTADO_EM_USO
+            = "Cidade de código %d não pode ser removida, pois está em uso";
+
+    public List<RestauranteDTO> listar(){
+        return resturanteRepository.findAll().stream()
+                .map(restaurante->modelMapper.map(restaurante,RestauranteDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public Restaurante buscar(Long id){
-        var restaurante = resturanteRepository.findById(id)
-                .orElseThrow(()->
-                        new RestauranteNaoEncontradoException(id));
-        return restaurante;
+    public RestauranteDTO buscar(Long id){
+        var restaurante = getRestaurante(id);
+        return modelMapper.map(restaurante,RestauranteDTO.class);
     }
-    public Restaurante save(Restaurante restaurante){
+
+    @Transactional
+    public RestauranteDTO save(RestauranteInput restauranteInput){
         try{
-            Cozinha cozinha = cozinhaService.buscar(restaurante.getCozinha().getId());
-            restaurante.setCozinha(cozinha);
-            return resturanteRepository.save(restaurante);
+            Restaurante restaurante = modelMapper.map(restauranteInput,Restaurante.class);
+            return saveRestauranteAndReturnDTO(restaurante);
         }catch (CozinhaNaoEncontradaException e){
             throw new NegocioException(e.getMessage());
         }
 
     }
-    public Restaurante update(Long id,Restaurante restaurante){
-            Restaurante restaurante1 = buscar(id);
-            BeanUtils.copyProperties(restaurante,restaurante1,"id");
+
+    @Transactional
+    public RestauranteDTO update(Long id,RestauranteInput restauranteInput){
+            Restaurante restauranteAtual = getRestaurante(id);
+
+            //para tratar org.hibernate.HibernateException: identifier of an
+            //instance of com.igorfood.domain.model.Cozinha was altered from 2 to 3
+            restauranteAtual.setCozinha(new Cozinha());
+
+            modelMapper.map(restauranteInput,restauranteAtual);
             try{
-                return save(restaurante1);
+                return saveRestauranteAndReturnDTO(restauranteAtual);
             }catch (EntidadeNaoEncontradaException e){
                 throw new NegocioException(e.getMessage());
             }
-
-
     }
 
+
+    @Transactional
     public void remover(Long id){
-        buscar(id);
-        resturanteRepository.deleteById(id);
+        try{
+            buscar(id);
+            resturanteRepository.deleteById(id);
+            resturanteRepository.flush();
+        } catch (DataIntegrityViolationException e) {
+            throw new EntidadeEmUsoException(
+                    String.format(MSG_ESTADO_EM_USO, id));
+        }
     }
 
-    public Object updateField(Long restauranteId, Map<String, Object> campos) {
-        Restaurante restauranteAtual = buscar(restauranteId);
+    @Transactional
+    public RestauranteDTO updateField(Long restauranteId, Map<String, Object> campos) {
+        Restaurante restauranteAtual = getRestaurante(restauranteId);
         merge(restauranteAtual,campos);
-        return update(restauranteId,restauranteAtual);
+        return saveRestauranteAndReturnDTO(restauranteAtual);
     }
+
+    private Restaurante getRestaurante(Long id) {
+        var restaurante = resturanteRepository.findById(id)
+                .orElseThrow(()->
+                        new RestauranteNaoEncontradoException(id));
+        return restaurante;
+    }
+
+    private RestauranteDTO saveRestauranteAndReturnDTO(Restaurante restaurante) {
+        Cozinha cozinha = cozinhaService.getCozinha(restaurante.getCozinha().getId());
+        restaurante.setCozinha(cozinha);
+        return modelMapper.map(resturanteRepository.save((restaurante)), RestauranteDTO.class);
+    }
+
 
     private void merge(Restaurante restauranteDestino, Map<String, Object> campos) {
         try{

@@ -1,6 +1,8 @@
 package com.igorfood.controller;
 
 import com.igorfood.domain.model.Estado;
+import com.igorfood.dtos.EstadoDTO;
+import com.igorfood.dtos.input.EstadoInput;
 import com.igorfood.services.EstadoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,29 +19,26 @@ public class EstadoController {
     private EstadoService estadoService;
 
     @GetMapping
-    public List<Estado> listar() {
+    public List<EstadoDTO> listar() {
         return estadoService.findAll();
     }
 
     @GetMapping("/{estadoId}")
-    public Estado buscar(@PathVariable Long estadoId) {
+    public EstadoDTO buscar(@PathVariable Long estadoId) {
         return estadoService.buscar(estadoId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado adicionar(@RequestBody Estado estado) {
+    public EstadoDTO adicionar(@RequestBody EstadoInput estado) {
         return estadoService.salvar(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public Estado atualizar(@PathVariable Long estadoId,
-                            @RequestBody Estado estado) {
-        Estado estadoAtual = estadoService.buscar(estadoId);
+    public EstadoDTO atualizar(@PathVariable Long estadoId,
+                            @RequestBody EstadoInput estado) {
 
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
-
-        return estadoService.salvar(estadoAtual);
+        return estadoService.update(estadoId,estado);
     }
 
     @DeleteMapping("/{estadoId}")

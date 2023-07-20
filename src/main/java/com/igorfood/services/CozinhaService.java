@@ -2,14 +2,19 @@ package com.igorfood.services;
 
 import com.igorfood.domain.model.Cozinha;
 import com.igorfood.domain.repository.CozinhaRepository;
+import com.igorfood.dtos.CozinhaDTO;
+import com.igorfood.dtos.input.CozinhaInput;
 import com.igorfood.exception.CozinhaNaoEncontradaException;
 import com.igorfood.exception.EntidadeEmUsoException;
+import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CozinhaService {
@@ -17,36 +22,52 @@ public class CozinhaService {
     @Autowired
     private CozinhaRepository cozinhaRepository;
 
-    public List<Cozinha> listar(){
-        return cozinhaRepository.findAll();
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public List<CozinhaDTO> listar(){
+        return cozinhaRepository.findAll().stream()
+                .map(cozinha -> modelMapper.map(cozinha,CozinhaDTO.class))
+                .collect(Collectors.toList());
     }
 
     private static final String MSG_COZINHA_EM_USO  =
             "Cozinha de código %d não pode ser removida, pois está em uso";
 
 
-    public Cozinha buscar(Long id){
-        return cozinhaRepository.findById(id)
-                .orElseThrow(() -> new CozinhaNaoEncontradaException(id));
+    public CozinhaDTO buscar(Long id){
+        return modelMapper.map(getCozinha(id),CozinhaDTO.class);
     }
 
-    public Cozinha salvar(Cozinha cozinha) {
-        return cozinhaRepository.save(cozinha);
+    @Transactional
+    public CozinhaDTO salvar(CozinhaInput cozinhaInput) {
+        Cozinha cozinhaAtual = modelMapper.map(cozinhaInput,Cozinha.class);
+        return modelMapper.map(cozinhaRepository.save(cozinhaAtual),CozinhaDTO.class);
     }
 
-    public Cozinha update(Long cozinhaId,Cozinha cozinhaDto){
-        var cozinha = buscar(cozinhaId);
-        BeanUtils.copyProperties(cozinhaDto,cozinha,"id");
-        return salvar(cozinha);
+    @Transactional
+    public CozinhaDTO update(Long cozinhaId,CozinhaInput cozinhaInput){
+        Cozinha cozinha = getCozinha(cozinhaId);
+        modelMapper.map(cozinhaInput,cozinha);
+        return modelMapper.map(cozinhaRepository.save(cozinha),CozinhaDTO.class);
     }
 
+    @Transactional
     public void excluir(Long cozinhaId) {
         try {
             buscar(cozinhaId);
             cozinhaRepository.deleteById(cozinhaId);
+            cozinhaRepository.flush();
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
                     String.format(MSG_COZINHA_EM_USO, cozinhaId));
         }
     }
+
+
+    public Cozinha getCozinha(Long id) {
+        return cozinhaRepository.findById(id)
+                .orElseThrow(() -> new CozinhaNaoEncontradaException(id));
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.igorfood.controller;
 
 import com.igorfood.domain.model.Restaurante;
+import com.igorfood.dtos.input.RestauranteInput;
 import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.services.RestauranteService;
 import jakarta.validation.Valid;
@@ -30,13 +31,13 @@ public class RestauranteController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> salvar(@RequestBody @Valid Restaurante restaurante){
-        return ResponseEntity.status(HttpStatus.CREATED).body(restauranteService.save(restaurante));
+    public ResponseEntity<?> salvar(@RequestBody @Valid RestauranteInput restauranteInput){
+        return ResponseEntity.status(HttpStatus.CREATED).body(restauranteService.save(restauranteInput));
     }
 
     @PutMapping("/{id_restaurante}")
-    public ResponseEntity<?> update(@PathVariable("id_restaurante") Long id, @RequestBody Restaurante restaurante) {
-        return ResponseEntity.ok(restauranteService.update(id, restaurante));
+    public ResponseEntity<?> update(@PathVariable("id_restaurante") Long id,@Valid @RequestBody RestauranteInput restauranteInput) {
+        return ResponseEntity.ok(restauranteService.update(id, restauranteInput));
     }
 
     @PatchMapping("/{id_restaurante}")

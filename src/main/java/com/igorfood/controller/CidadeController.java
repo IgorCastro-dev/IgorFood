@@ -2,6 +2,8 @@ package com.igorfood.controller;
 
 import com.igorfood.domain.model.Cidade;
 import com.igorfood.domain.repository.CidadeRepository;
+import com.igorfood.dtos.CidadeDTO;
+import com.igorfood.dtos.input.CidadeInput;
 import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.exception.NegocioException;
 import com.igorfood.services.CidadeService;
@@ -29,7 +31,7 @@ public class CidadeController {
     }
 
     @GetMapping("/{cidadeId}")
-    public Cidade buscar(@PathVariable Long cidadeId) {
+    public CidadeDTO buscar(@PathVariable Long cidadeId) {
         return cidadeService.buscar(cidadeId);
     }
 
@@ -48,7 +50,7 @@ public class CidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade adicionar(@Valid @RequestBody Cidade cidade) {
+    public CidadeDTO adicionar(@Valid @RequestBody CidadeInput cidade) {
         return cidadeService.salvar(cidade);
     }
 
@@ -74,8 +76,8 @@ public class CidadeController {
 //	}
 
     @PutMapping("/{cidadeId}")
-    public Cidade atualizar(@PathVariable Long cidadeId,
-                            @RequestBody Cidade cidade) {
+    public CidadeDTO atualizar(@PathVariable Long cidadeId,
+                            @RequestBody CidadeInput cidade) {
         return cidadeService.update(cidadeId,cidade);
     }
 
