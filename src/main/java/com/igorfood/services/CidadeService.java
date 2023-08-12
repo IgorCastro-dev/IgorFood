@@ -71,12 +71,12 @@ public class CidadeService {
         }
     }
 
-    private Cidade getCidade(Long cidadeId) {
+    public Cidade getCidade(Long cidadeId) {
         return cidadeRepository.findById(cidadeId).orElseThrow(
                 () -> new CidadeNaoEncontradaException(cidadeId));
     }
 
-    private Cidade saveCidade(Cidade cidade) {
+    private Cidade  saveCidade(Cidade cidade) {
         Estado estado = estadoService.getEstado(cidade.getEstado().getId());
         cidade.setEstado(estado);
         return cidadeRepository.save(cidade);

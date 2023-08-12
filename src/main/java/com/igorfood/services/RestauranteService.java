@@ -2,7 +2,9 @@ package com.igorfood.services;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.igorfood.domain.model.Cidade;
 import com.igorfood.domain.model.Cozinha;
+import com.igorfood.domain.model.FormaPagamento;
 import com.igorfood.domain.model.Restaurante;
 import com.igorfood.domain.repository.RestauranteRepository;
 import com.igorfood.dtos.RestauranteDTO;
@@ -11,8 +13,6 @@ import com.igorfood.exception.*;
 import jakarta.transaction.Transactional;
 import org.flywaydb.core.internal.util.ExceptionUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -32,6 +32,12 @@ public class RestauranteService {
 
     @Autowired
     private RestauranteRepository resturanteRepository;
+
+    @Autowired
+    private FormaPagamentoService formaPagamentoService;
+
+    @Autowired
+    private CidadeService cidadeService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -55,7 +61,7 @@ public class RestauranteService {
         try{
             Restaurante restaurante = modelMapper.map(restauranteInput,Restaurante.class);
             return saveRestauranteAndReturnDTO(restaurante);
-        }catch (CozinhaNaoEncontradaException e){
+        }catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e){
             throw new NegocioException(e.getMessage());
         }
 
@@ -97,16 +103,77 @@ public class RestauranteService {
         return saveRestauranteAndReturnDTO(restauranteAtual);
     }
 
-    private Restaurante getRestaurante(Long id) {
+    @Transactional
+    public void ativar(Long restauranteId){
+        Restaurante restaurante = getRestaurante(restauranteId);
+        restaurante.ativar();
+    }
+
+    @Transactional
+    public void desativar(Long restauranteId){
+        Restaurante restaurante = getRestaurante(restauranteId);
+        restaurante.desativar();
+    }
+
+    @Transactional
+    public void ativarRestaurantes(List<Long> restaurantesIds) {
+        try{
+            restaurantesIds.forEach(this::ativar);
+        }catch (RestauranteNaoEncontradoException e){
+            throw new NegocioException(e.getMessage(),e);
+        }
+
+    }
+
+    @Transactional
+    public void desativarRestaurantes(List<Long> restaurantesIds) {
+        try{
+            restaurantesIds.forEach(this::desativar);
+        }catch (RestauranteNaoEncontradoException e){
+            throw new NegocioException(e.getMessage(),e);
+        }
+    }
+
+    @Transactional
+    public void abrir(Long restauranteId) {
+        Restaurante restaurante = getRestaurante(restauranteId);
+        restaurante.abertura();
+    }
+
+    @Transactional
+    public void fechar(Long restauranteId) {
+        Restaurante restaurante = getRestaurante(restauranteId);
+        restaurante.fechamento();
+    }
+
+    public Restaurante getRestaurante(Long id) {
         var restaurante = resturanteRepository.findById(id)
                 .orElseThrow(()->
                         new RestauranteNaoEncontradoException(id));
         return restaurante;
     }
 
+    @Transactional
+    public void removerFormaPagamento(Long restauranteId, Long formaPagamentoId){
+        Restaurante restaurante = getRestaurante(restauranteId);
+        FormaPagamento formaPagamento = formaPagamentoService.getFormaPagamento(formaPagamentoId);
+        restaurante.removerFormaPagamento(formaPagamento);
+    }
+
+    @Transactional
+    public void adicionarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+        Restaurante restaurante = getRestaurante(restauranteId);
+        FormaPagamento formaPagamento = formaPagamentoService.getFormaPagamento(formaPagamentoId);
+        restaurante.adicionarFormaPagamento(formaPagamento);
+    }
+
     private RestauranteDTO saveRestauranteAndReturnDTO(Restaurante restaurante) {
         Cozinha cozinha = cozinhaService.getCozinha(restaurante.getCozinha().getId());
         restaurante.setCozinha(cozinha);
+
+        Cidade cidade = cidadeService.getCidade(restaurante.getEndereco().getCidade().getId());
+        restaurante.getEndereco().setCidade(cidade);
+
         return modelMapper.map(resturanteRepository.save((restaurante)), RestauranteDTO.class);
     }
 
@@ -129,4 +196,7 @@ public class RestauranteService {
         }
 
     }
+
+
+
 }

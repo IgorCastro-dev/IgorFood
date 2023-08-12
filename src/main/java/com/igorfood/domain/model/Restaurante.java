@@ -1,24 +1,22 @@
 package com.igorfood.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.igorfood.Groups;
+
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.groups.ConvertGroup;
-import jakarta.validation.groups.Default;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "restaurante")
 public class Restaurante {
+
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +32,7 @@ public class Restaurante {
     private Cozinha cozinha;
 
     @OneToMany(mappedBy = "restaurante")
-    private List<Produto>  produtos;
+    private Set<Produto>  produtos;
 
     @Embedded
     private Endereco endereco;
@@ -47,5 +45,51 @@ public class Restaurante {
     @JoinTable(name = "restaurante_forma_pagamento",
             joinColumns = @JoinColumn(name = "restaurante_id"),
             inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-    private List<FormaPagamento> formaPagamentos;
+    private Set<FormaPagamento> formaPagamentos;
+
+    @ManyToMany
+    @JoinTable(
+            name = "restaurante_usuario_responsavel",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    private Set<Usuario> usuarios;
+
+    private Boolean ativado = Boolean.TRUE;
+
+    private Boolean aberto;
+
+    public void abertura(){setAberto(true);}
+
+    public void fechamento(){setAberto(false);}
+
+    public void ativar(){
+        setAtivado(true);
+    }
+    public void desativar(){
+        setAtivado(false);
+    }
+
+    public boolean removerFormaPagamento(FormaPagamento formaPagamento){
+        return this.getFormaPagamentos().remove(formaPagamento);
+    }
+
+    public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
+        return this.getFormaPagamentos().add(formaPagamento);
+    }
+
+    public void associarUsuario(Usuario usuario) {
+        getUsuarios().add(usuario);
+    }
+    public void desassociarUsuario(Usuario usuario) {
+        getUsuarios().remove(usuario);
+    }
+
+    public boolean contemFormaPagamento(FormaPagamento formaPagamento) {
+        return getFormaPagamentos().contains(formaPagamento);
+    }
+
+    public boolean naoContemFormaPagamento(FormaPagamento formaPagamento) {
+        return !contemFormaPagamento(formaPagamento);
+    }
 }

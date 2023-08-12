@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -51,5 +52,41 @@ public class RestauranteController {
     public ResponseEntity<?> delete(@PathVariable("id_restaurante") Long id){
         restauranteService.remover(id);
         return ResponseEntity.ok("restaurante removido com o id = "+id);
+    }
+
+    @PutMapping("/{id_restaurante}/ativar")
+    public ResponseEntity<?> ativarRestaurante(@PathVariable("id_restaurante") Long id){
+        restauranteService.ativar(id);
+        return ResponseEntity.ok("restaurante ativado com o id = "+id);
+    }
+
+    @DeleteMapping("/{id_restaurante}/desativar")
+    public ResponseEntity<?> desativarRestaurante(@PathVariable("id_restaurante") Long id){
+        restauranteService.desativar(id);
+        return ResponseEntity.ok("restaurante desativado com o id = "+id);
+    }
+
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarRestaurantes(@RequestBody List<Long> restaurantesIds){
+        restauranteService.ativarRestaurantes(restaurantesIds);
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void desativarRestaurantes(@RequestBody List<Long> restaurantesIds){
+        restauranteService.desativarRestaurantes(restaurantesIds);
+    }
+
+    @PutMapping("/{id_restaurante}/abertura")
+    public ResponseEntity<String> abertura(@PathVariable("id_restaurante") Long restauranteId){
+        restauranteService.abrir(restauranteId);
+        return ResponseEntity.ok("restaurante aberto com o id = " + restauranteId);
+    }
+
+    @PutMapping("/{id_restaurante}/fechamento")
+    public ResponseEntity<String> fechamento(@PathVariable("id_restaurante") Long restauranteId){
+        restauranteService.fechar(restauranteId);
+        return ResponseEntity.ok("restaurante fechado com o id = " + restauranteId);
     }
 }
