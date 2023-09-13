@@ -29,10 +29,11 @@ public class RestauranteProdutoController {
 
     @GetMapping
     public ResponseEntity<Set<ProdutoDTO>> listarProdutos(
-            @PathVariable("restauranteId") Long restauranteId
+            @PathVariable("restauranteId") Long restauranteId,
+            @RequestParam(required = false) boolean incluirAtivos
     ){
         Restaurante restaurante = restauranteService.getRestaurante(restauranteId);
-        Set<ProdutoDTO> produtos = produtoService.listarProduto(restaurante);
+        Set<ProdutoDTO> produtos = produtoService.listarProduto(restaurante,incluirAtivos);
         return ResponseEntity.ok(produtos);
     }
 

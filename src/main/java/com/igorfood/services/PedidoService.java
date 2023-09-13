@@ -12,6 +12,9 @@ import com.igorfood.modelmapper.PedidoAssembler;
 import com.igorfood.modelmapper.PedidoResumeAssembler;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,9 +43,11 @@ public class PedidoService {
     @Autowired
     private PedidoResumeAssembler pedidoResumeAssembler;
 
-    public List<PedidoResumoDTO> listar(){
-        List<Pedido> pedidos = pedidoRepository.findAll();
-        return (List<PedidoResumoDTO>) pedidoResumeAssembler.collectionToDTO(pedidos);
+    public Page<PedidoResumoDTO> listar(Pageable pageable){
+        Page<Pedido> pedidos = pedidoRepository.findAll(pageable);
+        List<PedidoResumoDTO> pedidosDTO = pedidoResumeAssembler.collectionToDTO(pedidos.getContent());
+        Page<PedidoResumoDTO> pedidoResumoDTOPage = new PageImpl<>(pedidosDTO,pageable,pedidos.getTotalElements());
+        return pedidoResumoDTOPage;
     }
 
     public PedidoDTO buscar(String pedidoCodigo) {

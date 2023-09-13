@@ -24,10 +24,13 @@ public class ProdutoService {
     @Autowired
     private ProdutoAssembler produtoAssembler;
 
-    public Set<ProdutoDTO> listarProduto(Restaurante restaurante){
-        return (Set<ProdutoDTO>) produtoAssembler.toCollectionDTO(produtoRepository.findByRestaurante(restaurante));
+    public Set<ProdutoDTO> listarProduto(Restaurante restaurante, boolean incluirAtivos){
+        if (incluirAtivos){
+            return (Set<ProdutoDTO>) produtoAssembler.toCollectionDTO(produtoRepository.findAtivosByRestaurante(restaurante));
+        }else {
+            return (Set<ProdutoDTO>) produtoAssembler.toCollectionDTO(produtoRepository.findByRestaurante(restaurante));
+        }
     }
-
     public ProdutoDTO buscar(Long restauranteId, Long produtoId){
         return produtoAssembler.toDTO(getProduto(restauranteId,produtoId));
     }

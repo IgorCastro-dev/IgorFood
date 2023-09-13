@@ -6,11 +6,14 @@ import com.igorfood.dtos.CozinhaDTO;
 import com.igorfood.dtos.input.CozinhaInput;
 import com.igorfood.exception.CozinhaNaoEncontradaException;
 import com.igorfood.exception.EntidadeEmUsoException;
+import com.igorfood.modelmapper.CozinhaAssembler;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,10 +28,14 @@ public class CozinhaService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<CozinhaDTO> listar(){
-        return cozinhaRepository.findAll().stream()
-                .map(cozinha -> modelMapper.map(cozinha,CozinhaDTO.class))
-                .collect(Collectors.toList());
+    @Autowired
+    private CozinhaAssembler cozinhaAssembler;
+
+    public Page<CozinhaDTO> listar(Pageable pageable){
+        Page<Cozinha> cozinhasPage = cozinhaRepository.findAll(pageable);
+        List<CozinhaDTO> cozinhasDto = cozinhaAssembler.collectionToDTO(cozinhasPage.getContent());
+        Page<CozinhaDTO> cozinhasDTOPage = new PageImpl<>(cozinhasDto,pageable,cozinhasPage.getTotalElements());
+        return cozinhasDTOPage;
     }
 
     private static final String MSG_COZINHA_EM_USO  =

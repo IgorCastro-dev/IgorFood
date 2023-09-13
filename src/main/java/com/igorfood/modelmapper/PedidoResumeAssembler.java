@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,7 +20,7 @@ public class PedidoResumeAssembler {
         return modelMapper.map(pedido, PedidoResumoDTO.class);
     }
 
-    public Collection<PedidoResumoDTO> collectionToDTO(Collection<Pedido> pedidos){
+    public List<PedidoResumoDTO> collectionToDTO(Collection<Pedido> pedidos){
         return pedidos.stream().map(this::toDTO).collect(Collectors.toList());
     }
 }
