@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -27,8 +28,8 @@ public class VendaQueryServiceImpl implements VendaQueryService {
         Root<?> root = query.from(Pedido.class);
 
         var predicates = new ArrayList<Predicate>();
-        var functionConvertTz = builder.function("convert_tz", LocalDate.class,root.get("dataCriacao"),builder.literal("+00:00"),builder.literal(timeOffset));
-        var functionDateDataCriacao = builder.function("date", LocalDate.class,functionConvertTz);
+        var functionConvertTz = builder.function("convert_tz", Date.class,root.get("dataCriacao"),builder.literal("+00:00"),builder.literal(timeOffset));
+        var functionDateDataCriacao = builder.function("date", Date.class,functionConvertTz);
 
         var selection = builder.construct(VendaDiaria.class,
                             functionDateDataCriacao,

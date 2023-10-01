@@ -47,7 +47,10 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .tags(new Tag("Cidades","Gerencia cidades"),
                         new Tag("Grupos","gerencia grupos"),
                         new Tag("Cozinhas","gerencia cozinhas"),
-                        new Tag("Formas de pagamento","Gerencia as formas de pagamento"));
+                        new Tag("Formas de pagamento","Gerencia as formas de pagamento"),
+                        new Tag("Restaurantes","Gerencia os Restaurantes"),
+                        new Tag("Estados","Gerencia os Estados"),
+                        new Tag("Estatisticas","Mostra uma estatistica"));
     }
 
     private List<ResponseMessage> globalGetResponseMessages(){

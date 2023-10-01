@@ -3,8 +3,14 @@ package com.igorfood.controller;
 import com.igorfood.domain.model.Restaurante;
 import com.igorfood.dtos.input.RestauranteInput;
 import com.igorfood.exception.EntidadeNaoEncontradaException;
+import com.igorfood.exception.exceptionhandler.Erro;
 import com.igorfood.services.RestauranteService;
 import javax.validation.Valid;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Api(tags = "Restaurantes")
 @RestController
 @RequestMapping("igorfood/restaurantes")
 public class RestauranteController {
@@ -26,16 +33,30 @@ public class RestauranteController {
         return ResponseEntity.ok(restauranteService.listar());
     }
 
+    @ApiOperation("Busca o restaurante por id")
+    @ApiResponses({
+            @ApiResponse(code = 404,message = "Restaurante não encontrado",response = Erro.class),
+            @ApiResponse(code = 400,message = "Id do restaurante inválido",response = Erro.class)
+    })
     @GetMapping("/{id_restaurante}")
     public ResponseEntity<?> buscar(@PathVariable("id_restaurante") Long id) {
         return ResponseEntity.ok(restauranteService.buscar(id));
     }
 
+    @ApiOperation("Cria um restaurante")
+    @ApiResponses({
+            @ApiResponse(code = 201,message = "Restaurante criado")
+    })
     @PostMapping()
     public ResponseEntity<?> salvar(@RequestBody @Valid RestauranteInput restauranteInput){
         return ResponseEntity.status(HttpStatus.CREATED).body(restauranteService.save(restauranteInput));
     }
 
+    @ApiOperation("Atualiza um Restaurante")
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "Restaurante atualizado"),
+            @ApiResponse(code = 404,message = "Restaurante não encontrado",response = Erro.class)
+    })
     @PutMapping("/{id_restaurante}")
     public ResponseEntity<?> update(@PathVariable("id_restaurante") Long id,@Valid @RequestBody RestauranteInput restauranteInput) {
         return ResponseEntity.ok(restauranteService.update(id, restauranteInput));

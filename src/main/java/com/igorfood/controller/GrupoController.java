@@ -46,7 +46,7 @@ public class GrupoController {
 
     @ApiOperation("Criar grupo")
     @ApiResponses({
-            @ApiResponse(code = 200,message = "grupo criado")
+            @ApiResponse(code = 201,message = "grupo criado")
     })
     @PostMapping
     public ResponseEntity<GrupoDTO> salvarGrupo(@Valid @RequestBody GrupoInput grupoInput){

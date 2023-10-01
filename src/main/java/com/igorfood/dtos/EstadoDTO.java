@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class EstadoDTO {
+
     @ApiModelProperty(example = "1")
     private Long id;
 
