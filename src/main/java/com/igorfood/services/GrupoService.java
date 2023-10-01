@@ -6,7 +6,7 @@ import com.igorfood.dtos.GrupoDTO;
 import com.igorfood.dtos.input.GrupoInput;
 import com.igorfood.exception.EntidadeEmUsoException;
 import com.igorfood.exception.GrupoNaoEncontradoException;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

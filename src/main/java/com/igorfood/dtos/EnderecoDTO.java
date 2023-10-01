@@ -1,9 +1,4 @@
 package com.igorfood.dtos;
-
-import com.igorfood.domain.model.Cidade;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data

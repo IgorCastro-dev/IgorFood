@@ -5,7 +5,7 @@ import com.igorfood.dtos.input.SenhaInput;
 import com.igorfood.dtos.input.UsuarioInput;
 import com.igorfood.dtos.input.UsuarioSemSenhaInput;
 import com.igorfood.services.UsuarioService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

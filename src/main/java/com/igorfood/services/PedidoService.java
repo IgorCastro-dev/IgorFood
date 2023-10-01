@@ -10,7 +10,7 @@ import com.igorfood.exception.NegocioException;
 import com.igorfood.exception.PedidoNaoEncontradoException;
 import com.igorfood.modelmapper.PedidoAssembler;
 import com.igorfood.modelmapper.PedidoResumeAssembler;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

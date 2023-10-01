@@ -8,7 +8,7 @@ import com.igorfood.domain.repository.EstadoRepository;
 import com.igorfood.dtos.CidadeDTO;
 import com.igorfood.dtos.input.CidadeInput;
 import com.igorfood.exception.*;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;

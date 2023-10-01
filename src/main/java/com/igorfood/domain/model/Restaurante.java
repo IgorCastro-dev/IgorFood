@@ -1,9 +1,11 @@
 package com.igorfood.domain.model;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -37,8 +39,12 @@ public class Restaurante {
     @Embedded
     private Endereco endereco;
 
+    @CreationTimestamp
+    @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dataAtualizacao;
 
+    @UpdateTimestamp
+    @Column(nullable = false, columnDefinition = "datetime")
     private OffsetDateTime dataCadastro;
 
     @ManyToMany

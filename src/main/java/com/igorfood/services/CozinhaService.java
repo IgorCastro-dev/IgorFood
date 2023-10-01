@@ -7,7 +7,7 @@ import com.igorfood.dtos.input.CozinhaInput;
 import com.igorfood.exception.CozinhaNaoEncontradaException;
 import com.igorfood.exception.EntidadeEmUsoException;
 import com.igorfood.modelmapper.CozinhaAssembler;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

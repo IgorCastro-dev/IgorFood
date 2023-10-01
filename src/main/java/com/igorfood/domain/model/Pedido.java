@@ -1,12 +1,11 @@
 package com.igorfood.domain.model;
 
 import com.igorfood.exception.NegocioException;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.*;
 

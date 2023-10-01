@@ -7,7 +7,7 @@ import com.igorfood.dtos.PermissaoDTO;
 import com.igorfood.exception.NegocioException;
 import com.igorfood.exception.PermissaoNaoEncontradaException;
 import com.igorfood.modelmapper.PermissaoAssembler;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

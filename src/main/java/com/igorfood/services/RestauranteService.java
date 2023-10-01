@@ -10,7 +10,7 @@ import com.igorfood.domain.repository.RestauranteRepository;
 import com.igorfood.dtos.RestauranteDTO;
 import com.igorfood.dtos.input.RestauranteInput;
 import com.igorfood.exception.*;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.flywaydb.core.internal.util.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

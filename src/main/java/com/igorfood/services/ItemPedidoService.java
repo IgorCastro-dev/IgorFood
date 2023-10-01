@@ -7,7 +7,7 @@ import com.igorfood.dtos.input.ItemPedidoInput;
 import com.igorfood.exception.NegocioException;
 import com.igorfood.exception.ProdutoNaoEncontradoException;
 import com.igorfood.modelmapper.ItemPedidoAssembler;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

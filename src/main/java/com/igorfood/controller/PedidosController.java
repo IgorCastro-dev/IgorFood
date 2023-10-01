@@ -4,7 +4,7 @@ import com.igorfood.dtos.PedidoDTO;
 import com.igorfood.dtos.PedidoResumoDTO;
 import com.igorfood.dtos.input.PedidoInput;
 import com.igorfood.services.PedidoService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

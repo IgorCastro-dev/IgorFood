@@ -1,10 +1,12 @@
 package com.igorfood.dtos;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 public class EstadoDTO {
+    @ApiModelProperty(example = "1")
     private Long id;
+
+    @ApiModelProperty(example = "MG")
     private String nome;
 }

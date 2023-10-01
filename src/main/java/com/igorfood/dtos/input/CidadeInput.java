@@ -1,11 +1,13 @@
 package com.igorfood.dtos.input;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class CidadeInput {
 
+    @ApiModelProperty(example = "Uberlândia")
     @NotBlank
     private String nome;
 

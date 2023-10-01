@@ -4,7 +4,7 @@ import com.igorfood.domain.model.Restaurante;
 import com.igorfood.dtos.input.RestauranteInput;
 import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.services.RestauranteService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

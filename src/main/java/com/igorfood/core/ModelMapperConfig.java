@@ -2,10 +2,8 @@ package com.igorfood.core;
 
 import com.igorfood.domain.model.Endereco;
 import com.igorfood.domain.model.ItemPedido;
-import com.igorfood.domain.model.Restaurante;
 import com.igorfood.dtos.EnderecoDTO;
 import com.igorfood.dtos.input.ItemPedidoInput;
-import com.igorfood.dtos.input.RestauranteInput;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

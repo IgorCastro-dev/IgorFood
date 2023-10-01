@@ -1,9 +1,7 @@
 package com.igorfood.domain.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 import java.util.Set;
 
 @Data

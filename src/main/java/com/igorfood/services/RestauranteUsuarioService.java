@@ -5,7 +5,7 @@ import com.igorfood.domain.model.Usuario;
 import com.igorfood.dtos.UsuarioDTO;
 import com.igorfood.exception.NegocioException;
 import com.igorfood.modelmapper.UsuarioAssembler;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,0 +1,12 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    container_name: my-mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: igor
+      MYSQL_DATABASE: igorfood
+      MYSQL_USER: igor
+      MYSQL_PASSWORD: igor
+    ports:
+      - "3306:3306"

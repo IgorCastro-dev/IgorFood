@@ -7,7 +7,7 @@ import com.igorfood.dtos.FormaPagamentoDTO;
 import com.igorfood.dtos.input.FormaPagamentoInput;
 import com.igorfood.exception.EstadoNaoEncontradoException;
 import com.igorfood.exception.FormaPagamentoNaoEncontradoException;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
