@@ -1,14 +1,11 @@
 package com.igorfood.controller;
 
-import com.igorfood.domain.model.Grupo;
-import com.igorfood.domain.model.Permissao;
 import com.igorfood.dtos.PermissaoDTO;
-import com.igorfood.services.PermissaoService;
+import com.igorfood.domain.services.PermissaoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;

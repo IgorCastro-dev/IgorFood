@@ -1,11 +1,9 @@
-package com.igorfood.services;
+package com.igorfood.domain.services;
 
 import com.igorfood.domain.model.FormaPagamento;
-import com.igorfood.domain.model.Restaurante;
 import com.igorfood.domain.repository.FormaPagamentoRepository;
 import com.igorfood.dtos.FormaPagamentoDTO;
 import com.igorfood.dtos.input.FormaPagamentoInput;
-import com.igorfood.exception.EstadoNaoEncontradoException;
 import com.igorfood.exception.FormaPagamentoNaoEncontradoException;
 import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;

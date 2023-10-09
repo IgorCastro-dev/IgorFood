@@ -1,4 +1,4 @@
-package com.igorfood.services;
+package com.igorfood.domain.services;
 
 import com.igorfood.domain.model.Usuario;
 import com.igorfood.domain.repository.UsuarioRepository;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;

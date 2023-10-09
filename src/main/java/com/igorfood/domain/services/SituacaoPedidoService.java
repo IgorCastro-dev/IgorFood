@@ -1,4 +1,4 @@
-package com.igorfood.services;
+package com.igorfood.domain.services;
 
 import com.igorfood.domain.model.Pedido;
 import javax.transaction.Transactional;

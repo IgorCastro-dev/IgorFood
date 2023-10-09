@@ -1,35 +1,94 @@
 package com.igorfood.controller;
 
+import com.igorfood.domain.model.FotoProduto;
+import com.igorfood.domain.services.CatalogoFotoProdutoService;
+import com.igorfood.domain.services.FotoStorageService;
+import com.igorfood.dtos.FotoProdutoDto;
 import com.igorfood.dtos.input.FotoArquivoInput;
+import com.igorfood.exception.EntidadeNaoEncontradaException;
+import com.igorfood.modelmapper.FotoProdutoAssembler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
+import javax.validation.Valid;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.UUID;
+import java.io.InputStream;
+import java.util.List;
 
 @RestController
 @RequestMapping("igorfood/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
 public class RestauranteProdutoFotoController {
 
+    @Autowired
+    private CatalogoFotoProdutoService produtoService;
+
+    @Autowired
+    private FotoStorageService fotoStorageService;
+
+    @Autowired
+    private FotoProdutoAssembler fotoProdutoAssembler;
+
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void atualizaFoto(
+    public FotoProdutoDto atualizaFoto(
             @PathVariable("restauranteId") Long restauranteId,
             @PathVariable("produtoId") Long produtoId,
-            FotoArquivoInput fotoArquivoInput){
+            @Valid FotoArquivoInput fotoArquivoInput) throws IOException {
+        return produtoService.fotoProdutoSalvar(fotoArquivoInput,restauranteId,restauranteId);
+    }
 
-        String nomeArquivo = UUID.randomUUID().toString()+"_"+fotoArquivoInput.getArquivo().getOriginalFilename();
-        Path localArquivo = Path.of("/Users/igorj/Videos/teste",nomeArquivo);
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public FotoProdutoDto buscarFoto(@PathVariable Long restauranteId,
+                                     @PathVariable Long produtoId) {
+            return fotoProdutoAssembler.modelToDto(produtoService.buscarFotoOuFalhar(produtoId,restauranteId));
+    }
 
-        System.out.println(fotoArquivoInput.getDescricao());
-        System.out.println(localArquivo);
-        System.out.println(fotoArquivoInput.getArquivo().getContentType());
-
+    @GetMapping
+    public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId,
+                                                          @PathVariable Long produtoId,
+                                                          @RequestHeader(name = "accept") String AcceptHeader) {
         try {
-            fotoArquivoInput.getArquivo().transferTo(localArquivo);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            FotoProduto fotoProduto = produtoService.buscarFotoOuFalhar(produtoId,restauranteId);
+            MediaType mediaTypeFoto = MediaType.parseMediaType(fotoProduto.getContentType());
+            List<MediaType> mediaTypesAceitas = MediaType.parseMediaTypes(AcceptHeader);
+            verificaCompatibilidade(mediaTypeFoto,mediaTypesAceitas);
+            InputStream foto = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
+            System.out.println(foto);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(new InputStreamResource(foto));
+        }catch(EntidadeNaoEncontradaException | HttpMediaTypeNotAcceptableException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @DeleteMapping
+    public void deletar(@PathVariable Long restauranteId,
+                        @PathVariable Long produtoId){
+        FotoProduto fotoProduto = produtoService.buscarFotoOuFalhar(produtoId,restauranteId);
+        produtoService.fotoProdutoDeletar(fotoProduto);
+    }
+
+    private void verificaCompatibilidade(MediaType mediaTypeFoto, List<MediaType> mediaTypesAceitas) throws HttpMediaTypeNotAcceptableException {
+        boolean compativel = mediaTypesAceitas.stream().anyMatch(mediaType ->
+        mediaType.isCompatibleWith(mediaTypeFoto));
+        if (!compativel){
+            throw new HttpMediaTypeNotAcceptableException(mediaTypesAceitas);
         }
     }
 }
+
+
+//    String nomeArquivo = UUID.randomUUID().toString()+"_"+fotoArquivoInput.getArquivo().getOriginalFilename();
+//    Path localArquivo = Path.of("/Users/igorj/Videos/teste",nomeArquivo);
+//
+//        System.out.println(fotoArquivoInput.getDescricao());
+//                System.out.println(localArquivo);
+//                System.out.println(fotoArquivoInput.getArquivo().getContentType());
+//
+//                try {
+//                fotoArquivoInput.getArquivo().transferTo(localArquivo);
+//                } catch (IOException e) {
+//                throw new RuntimeException(e);
+//                }

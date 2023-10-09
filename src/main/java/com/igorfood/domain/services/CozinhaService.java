@@ -1,4 +1,4 @@
-package com.igorfood.services;
+package com.igorfood.domain.services;
 
 import com.igorfood.domain.model.Cozinha;
 import com.igorfood.domain.repository.CozinhaRepository;
@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CozinhaService {

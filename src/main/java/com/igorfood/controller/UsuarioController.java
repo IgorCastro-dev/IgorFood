@@ -4,14 +4,13 @@ import com.igorfood.dtos.UsuarioDTO;
 import com.igorfood.dtos.input.SenhaInput;
 import com.igorfood.dtos.input.UsuarioInput;
 import com.igorfood.dtos.input.UsuarioSemSenhaInput;
-import com.igorfood.services.UsuarioService;
+import com.igorfood.domain.services.UsuarioService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController

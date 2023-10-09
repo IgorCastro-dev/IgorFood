@@ -2,10 +2,8 @@ package com.igorfood.controller;
 
 import com.igorfood.dtos.CozinhaDTO;
 import com.igorfood.dtos.input.CozinhaInput;
-import com.igorfood.exception.EntidadeEmUsoException;
-import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.exception.exceptionhandler.Erro;
-import com.igorfood.services.CozinhaService;
+import com.igorfood.domain.services.CozinhaService;
 import javax.validation.Valid;
 
 import io.swagger.annotations.Api;
@@ -18,8 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Api(tags = "Cozinhas")
 @RestController

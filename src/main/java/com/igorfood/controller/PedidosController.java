@@ -3,7 +3,7 @@ package com.igorfood.controller;
 import com.igorfood.dtos.PedidoDTO;
 import com.igorfood.dtos.PedidoResumoDTO;
 import com.igorfood.dtos.input.PedidoInput;
-import com.igorfood.services.PedidoService;
+import com.igorfood.domain.services.PedidoService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,8 +12,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("igorfood/pedidos")

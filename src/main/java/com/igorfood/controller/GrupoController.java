@@ -4,7 +4,7 @@ package com.igorfood.controller;
 import com.igorfood.dtos.GrupoDTO;
 import com.igorfood.dtos.input.GrupoInput;
 import com.igorfood.exception.exceptionhandler.Erro;
-import com.igorfood.services.GrupoService;
+import com.igorfood.domain.services.GrupoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

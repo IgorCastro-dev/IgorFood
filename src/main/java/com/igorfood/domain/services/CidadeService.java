@@ -1,20 +1,16 @@
-package com.igorfood.services;
+package com.igorfood.domain.services;
 
 import com.igorfood.domain.model.Cidade;
 import com.igorfood.domain.model.Estado;
-import com.igorfood.domain.model.Restaurante;
 import com.igorfood.domain.repository.CidadeRepository;
-import com.igorfood.domain.repository.EstadoRepository;
 import com.igorfood.dtos.CidadeDTO;
 import com.igorfood.dtos.input.CidadeInput;
 import com.igorfood.exception.*;
 import javax.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -5,7 +5,7 @@ import com.igorfood.domain.repository.CidadeRepository;
 import com.igorfood.dtos.CidadeDTO;
 import com.igorfood.dtos.input.CidadeInput;
 import com.igorfood.exception.exceptionhandler.Erro;
-import com.igorfood.services.CidadeService;
+import com.igorfood.domain.services.CidadeService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.igorfood.services;
+package com.igorfood.domain.services;
 
 import com.igorfood.domain.model.Estado;
 import com.igorfood.domain.repository.EstadoRepository;

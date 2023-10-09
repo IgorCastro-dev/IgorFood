@@ -1,17 +1,14 @@
-package com.igorfood.services;
+package com.igorfood.domain.services;
 
 import com.igorfood.domain.model.ItemPedido;
 import com.igorfood.domain.model.Pedido;
 import com.igorfood.domain.model.Produto;
-import com.igorfood.dtos.input.ItemPedidoInput;
 import com.igorfood.exception.NegocioException;
 import com.igorfood.exception.ProdutoNaoEncontradoException;
 import com.igorfood.modelmapper.ItemPedidoAssembler;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ItemPedidoService {

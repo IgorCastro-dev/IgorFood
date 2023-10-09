@@ -1,11 +1,10 @@
-package com.igorfood.services;
+package com.igorfood.domain.services;
 
 import com.igorfood.domain.model.*;
 import com.igorfood.domain.repository.PedidoRepository;
 import com.igorfood.dtos.PedidoDTO;
 import com.igorfood.dtos.PedidoResumoDTO;
 import com.igorfood.dtos.input.PedidoInput;
-import com.igorfood.dtos.input.RestauranteIdInput;
 import com.igorfood.exception.NegocioException;
 import com.igorfood.exception.PedidoNaoEncontradoException;
 import com.igorfood.modelmapper.PedidoAssembler;

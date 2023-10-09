@@ -4,7 +4,7 @@ package com.igorfood.controller;
 import com.igorfood.dtos.FormaPagamentoDTO;
 import com.igorfood.dtos.input.FormaPagamentoInput;
 import com.igorfood.exception.exceptionhandler.Erro;
-import com.igorfood.services.FormaPagamentoService;
+import com.igorfood.domain.services.FormaPagamentoService;
 import javax.validation.Valid;
 
 import io.swagger.annotations.Api;

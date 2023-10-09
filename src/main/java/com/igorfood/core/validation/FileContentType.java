@@ -6,22 +6,19 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 
-@Target({ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(
-        validatedBy = {ValorZeroIncluiDescricaoValidador.class}
+        validatedBy = {FileContentTypeValidador.class}
 )
-public @interface ValorZeroIncluiDescricao {
-    String message() default "multiplo invalido";
+public @interface FileContentType {
+    String message() default "Tipo de arquivo não permitido";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    String valorField();
-
-    String descricaoField();
-
-    String descricaoObrigatoriaField();
+    String[] allowed();
 }

@@ -1,10 +1,8 @@
 package com.igorfood.controller;
 
-import com.igorfood.domain.model.Restaurante;
 import com.igorfood.dtos.input.RestauranteInput;
-import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.exception.exceptionhandler.Erro;
-import com.igorfood.services.RestauranteService;
+import com.igorfood.domain.services.RestauranteService;
 import javax.validation.Valid;
 
 import io.swagger.annotations.Api;

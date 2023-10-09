@@ -1,7 +1,7 @@
 package com.igorfood.controller;
 
 import com.igorfood.dtos.GrupoDTO;
-import com.igorfood.services.UsuarioGrupoService;
+import com.igorfood.domain.services.UsuarioGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,12 +1,11 @@
 package com.igorfood.controller;
 
-import com.igorfood.domain.model.Produto;
 import com.igorfood.domain.model.Restaurante;
 import com.igorfood.dtos.ProdutoDTO;
 import com.igorfood.dtos.input.ProdutoInput;
 import com.igorfood.modelmapper.ProdutoAssembler;
-import com.igorfood.services.ProdutoService;
-import com.igorfood.services.RestauranteService;
+import com.igorfood.domain.services.ProdutoService;
+import com.igorfood.domain.services.RestauranteService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

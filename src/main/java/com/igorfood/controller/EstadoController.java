@@ -1,15 +1,13 @@
 package com.igorfood.controller;
 
-import com.igorfood.domain.model.Estado;
 import com.igorfood.dtos.EstadoDTO;
 import com.igorfood.dtos.input.EstadoInput;
 import com.igorfood.exception.exceptionhandler.Erro;
-import com.igorfood.services.EstadoService;
+import com.igorfood.domain.services.EstadoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

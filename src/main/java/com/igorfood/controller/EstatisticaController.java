@@ -2,7 +2,7 @@ package com.igorfood.controller;
 
 import com.igorfood.dtos.VendaDiaria;
 import com.igorfood.filter.VendaDiariaFilter;
-import com.igorfood.services.VendaQueryService;
+import com.igorfood.domain.services.VendaQueryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

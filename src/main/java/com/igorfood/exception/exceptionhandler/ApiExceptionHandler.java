@@ -12,7 +12,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -69,8 +71,21 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return handleValidationInternal(ex, headers, status, request,ex.getBindingResult());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return ResponseEntity.status(status).headers(headers).build();
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return super.handleHttpMediaTypeNotAcceptable(ex, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleValidationInternal(Exception ex, HttpHeaders headers, HttpStatus status, WebRequest request, BindingResult bindingResult) {
         String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto";
-        BindingResult bindingResult = ex.getBindingResult();
         List<Erro.Field> erroField = bindingResult.getFieldErrors().stream()
                                         .map(fieldError ->{
                                                 String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
@@ -83,6 +98,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         Erro erro = createErroBuilder((HttpStatus) status,ErroType.DADOS_INVALIDDOS,detail).timestamp(OffsetDateTime.now()).fields(erroField).build();
         return handleExceptionInternal(ex,erro,new HttpHeaders(),status,request);
     }
+
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -150,17 +166,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus statusCode, WebRequest request) {
-        if (body instanceof String) {
+        if (body == null) {
            body = Erro.builder()
                         .timestamp(OffsetDateTime.now())
                         .status(statusCode.value())
-                        .title((String) body)
+                        .title(statusCode.getReasonPhrase())
                         .build();
-       }else if (body == null || body.getClass().getSimpleName().equals(("ProblemDetail"))) {
+       }else if (body instanceof String) {
             body = Erro.builder()
                         .timestamp(OffsetDateTime.now())
                         .status(statusCode.value())
-                        .title(ex.getMessage())
+                        .title((String) body)
                         .build();
         }
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
