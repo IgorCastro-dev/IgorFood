@@ -9,6 +9,8 @@ import com.igorfood.exception.EntidadeNaoEncontradaException;
 import com.igorfood.modelmapper.FotoProdutoAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -54,11 +56,18 @@ public class RestauranteProdutoFotoController {
             MediaType mediaTypeFoto = MediaType.parseMediaType(fotoProduto.getContentType());
             List<MediaType> mediaTypesAceitas = MediaType.parseMediaTypes(AcceptHeader);
             verificaCompatibilidade(mediaTypeFoto,mediaTypesAceitas);
-            InputStream foto = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
-            System.out.println(foto);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(new InputStreamResource(foto));
+            FotoStorageService.FotoRecuperada foto = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
+            if (foto.temUrl()){
+                return ResponseEntity
+                        .status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION,foto.getUrl())
+                        .build();
+
+            }else {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(new InputStreamResource(foto.getInputStream()));
+            }
         }catch(EntidadeNaoEncontradaException | HttpMediaTypeNotAcceptableException e){
             return ResponseEntity.notFound().build();
         }

@@ -39,15 +39,9 @@ public class CatalogoFotoProdutoService {
 
     @Transactional
     public FotoProdutoDto fotoProdutoSalvar(FotoArquivoInput fotoArquivoInput, Long produtoId,Long restauranteId) throws IOException {
-        FotoProduto fotoProduto = new FotoProduto();
         Produto produto = produtoService.getProduto(restauranteId,produtoId);
-        fotoProduto.setProduto(produto);
-        fotoProduto.setDescricao(fotoArquivoInput.getDescricao());
-        fotoProduto.setTamanho(fotoArquivoInput.getArquivo().getSize());
-        fotoProduto.setContentType(fotoArquivoInput.getArquivo().getContentType());
         String novoNomeArquivo = fotoStorageService.gerarNomeNovo(fotoArquivoInput.getArquivo().getOriginalFilename());
-        fotoProduto.setNomeArquivo(novoNomeArquivo);
-
+        FotoProduto fotoProduto = getFotoProduto(fotoArquivoInput, produto, novoNomeArquivo);
         String fotoExistente = null;
         Optional<FotoProduto> fotoProdutoOptional = produtoRepository.findFotoById(restauranteId,produtoId);
         if (fotoProdutoOptional.isPresent()){
@@ -55,13 +49,9 @@ public class CatalogoFotoProdutoService {
             produtoRepository.delete(fotoProdutoOptional.get());
 
         }
-
         produtoRepository.save(fotoProduto);
         produtoRepository.flush();
-        FotoStorageService.NovaFoto novaFoto = FotoStorageService.NovaFoto.builder()
-                                        .nomeArquivo(fotoProduto.getNomeArquivo())
-                                        .inputStream(fotoArquivoInput.getArquivo().getInputStream())
-                                        .build();
+        FotoStorageService.NovaFoto novaFoto = getNovaFoto(fotoArquivoInput, fotoProduto);
         fotoStorageService.substituir(fotoExistente,novaFoto);
         return fotoProdutoAssembler.modelToDto(fotoProduto);
     }
@@ -75,5 +65,24 @@ public class CatalogoFotoProdutoService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static FotoStorageService.NovaFoto getNovaFoto(FotoArquivoInput fotoArquivoInput, FotoProduto fotoProduto) throws IOException {
+        FotoStorageService.NovaFoto novaFoto = FotoStorageService.NovaFoto.builder()
+                .nomeArquivo(fotoProduto.getNomeArquivo())
+                .inputStream(fotoArquivoInput.getArquivo().getInputStream())
+                .contentType(fotoArquivoInput.getArquivo().getContentType())
+                .build();
+        return novaFoto;
+    }
+
+    private static FotoProduto getFotoProduto(FotoArquivoInput fotoArquivoInput, Produto produto, String novoNomeArquivo) {
+        FotoProduto fotoProduto = new FotoProduto();
+        fotoProduto.setProduto(produto);
+        fotoProduto.setDescricao(fotoArquivoInput.getDescricao());
+        fotoProduto.setTamanho(fotoArquivoInput.getArquivo().getSize());
+        fotoProduto.setContentType(fotoArquivoInput.getArquivo().getContentType());
+        fotoProduto.setNomeArquivo(novoNomeArquivo);
+        return fotoProduto;
     }
 }

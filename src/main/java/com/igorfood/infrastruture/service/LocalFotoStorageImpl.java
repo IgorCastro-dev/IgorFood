@@ -4,15 +4,10 @@ import com.igorfood.core.storage.StorageProperties;
 import com.igorfood.domain.services.FotoStorageService;
 import com.igorfood.exception.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 
 //@Service
 public class LocalFotoStorageImpl implements FotoStorageService {
@@ -38,10 +33,11 @@ public class LocalFotoStorageImpl implements FotoStorageService {
     }
 
     @Override
-    public InputStream recuperar(String nomeArquivo) {
+    public FotoRecuperada recuperar(String nomeArquivo) {
         try {
             Path caminhoArquivo = getArquivoPath(nomeArquivo);
-            return Files.newInputStream(caminhoArquivo);
+            FotoRecuperada fotoRecuperada = FotoRecuperada.builder().inputStream(Files.newInputStream(caminhoArquivo)).build();
+            return fotoRecuperada;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
