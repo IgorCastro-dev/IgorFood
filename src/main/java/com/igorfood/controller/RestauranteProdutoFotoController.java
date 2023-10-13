@@ -17,7 +17,6 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -38,6 +37,7 @@ public class RestauranteProdutoFotoController {
             @PathVariable("restauranteId") Long restauranteId,
             @PathVariable("produtoId") Long produtoId,
             @Valid FotoArquivoInput fotoArquivoInput) throws IOException {
+            System.out.println(fotoArquivoInput);
         return produtoService.fotoProdutoSalvar(fotoArquivoInput,restauranteId,restauranteId);
     }
 
@@ -59,7 +59,7 @@ public class RestauranteProdutoFotoController {
             FotoStorageService.FotoRecuperada foto = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
             if (foto.temUrl()){
                 return ResponseEntity
-                        .status(HttpStatus.FOUND)
+                        .status(HttpStatus.OK)
                         .header(HttpHeaders.LOCATION,foto.getUrl())
                         .build();
 

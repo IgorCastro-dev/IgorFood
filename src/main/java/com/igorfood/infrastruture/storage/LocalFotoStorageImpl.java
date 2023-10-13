@@ -1,4 +1,4 @@
-package com.igorfood.infrastruture.service;
+package com.igorfood.infrastruture.storage;
 
 import com.igorfood.core.storage.StorageProperties;
 import com.igorfood.domain.services.FotoStorageService;

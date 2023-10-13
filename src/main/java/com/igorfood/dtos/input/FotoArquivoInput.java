@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
 public class FotoArquivoInput {
 
     @NotNull
-    @FileContentType(allowed = {MediaType.IMAGE_PNG_VALUE,MediaType.IMAGE_JPEG_VALUE})
-    @FileSize(max = "200KB")
+    //@FileContentType(allowed = {MediaType.IMAGE_PNG_VALUE,MediaType.IMAGE_JPEG_VALUE})
+    //@FileSize(max = "200KB")
     private MultipartFile arquivo;
 
     @NotBlank

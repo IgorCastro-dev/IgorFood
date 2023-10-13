@@ -10,7 +10,7 @@ import java.nio.file.Path;
 @Component
 @ConfigurationProperties("igorfood.storage")
 public class StorageProperties {
-
+    private Implementacao impl = Implementacao.LOCAL;
     private Local local= new Local();
     private S3 s3 = new S3();
     @Data
@@ -25,5 +25,9 @@ public class StorageProperties {
         private String regiao;
         private String bucket;
         private String diretorioFotos;
+    }
+
+    public enum Implementacao{
+        S3,LOCAL
     }
 }

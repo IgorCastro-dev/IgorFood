@@ -38,6 +38,14 @@ public interface FotoStorageService {
 
     @Data
     @Builder
+    class NovoVideo{
+        private String nomeArquivo;
+        private InputStream inputStream;
+        private String contentType;
+    }
+
+    @Data
+    @Builder
     class FotoRecuperada{
         private InputStream inputStream;
         private String url;

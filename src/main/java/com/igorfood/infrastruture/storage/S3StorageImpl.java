@@ -1,4 +1,4 @@
-package com.igorfood.infrastruture.service;
+package com.igorfood.infrastruture.storage;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-@Service
 public class S3StorageImpl implements FotoStorageService {
     @Autowired
     private AmazonS3 amazonS3;
