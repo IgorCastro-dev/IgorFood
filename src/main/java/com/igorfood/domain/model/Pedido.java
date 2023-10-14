@@ -1,9 +1,11 @@
 package com.igorfood.domain.model;
 
+import com.igorfood.domain.event.PedidoConfirmadoEvento;
 import com.igorfood.exception.NegocioException;
 import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -11,7 +13,7 @@ import java.util.*;
 
 @Data
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +61,7 @@ public class Pedido {
     public void confirmar() {
         setStatus(StatusPedido.CONFIRMADO);
         setDataConfirmacao(OffsetDateTime.now());
+        registerEvent(new PedidoConfirmadoEvento(this));
     }
 
     public void entregue() {
