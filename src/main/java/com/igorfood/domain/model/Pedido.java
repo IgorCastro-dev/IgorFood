@@ -6,10 +6,11 @@ import javax.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.AbstractAggregateRoot;
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
+
 
 @Data
 @Entity
@@ -27,7 +28,7 @@ public class Pedido extends AbstractAggregateRoot<Pedido> {
     private Endereco endereco;
 
     @Enumerated(EnumType.STRING)
-    private StatusPedido status = StatusPedido.CRIADO;;
+    private StatusPedido status = StatusPedido.CRIADO;
 
     @CreationTimestamp
     private OffsetDateTime dataCriacao;

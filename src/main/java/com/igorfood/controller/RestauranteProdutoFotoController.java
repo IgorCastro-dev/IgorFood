@@ -59,7 +59,7 @@ public class RestauranteProdutoFotoController {
             FotoStorageService.FotoRecuperada foto = fotoStorageService.recuperar(fotoProduto.getNomeArquivo());
             if (foto.temUrl()){
                 return ResponseEntity
-                        .status(HttpStatus.OK)
+                        .status(HttpStatus.FOUND)
                         .header(HttpHeaders.LOCATION,foto.getUrl())
                         .build();
 

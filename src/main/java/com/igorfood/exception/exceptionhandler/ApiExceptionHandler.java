@@ -99,7 +99,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex,erro,new HttpHeaders(),status,request);
     }
 
-
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         var detail = "O corpo da requisição esta inválido, verifique a sintaxe";
