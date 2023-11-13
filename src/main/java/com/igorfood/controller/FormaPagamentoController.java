@@ -12,11 +12,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Api(tags = "Formas de pagamento")
@@ -30,7 +32,10 @@ public class FormaPagamentoController {
     @ApiOperation("Lista as formas de pagamento")
     @GetMapping
     public ResponseEntity<List<FormaPagamentoDTO>> listarFormaPagamento(){
-        return ResponseEntity.ok(formaPagamentoService.listar());
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(formaPagamentoService.listar());
     }
 
     @ApiOperation("Busca uma forma de pagamento por ID")
@@ -40,7 +45,9 @@ public class FormaPagamentoController {
     })
     @GetMapping("/{formaPagamentoId}")
     public ResponseEntity<FormaPagamentoDTO> buscarFormaPagamento(@PathVariable Long formaPagamentoId){
-        return ResponseEntity.ok(formaPagamentoService.buscar(formaPagamentoId));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(formaPagamentoService.buscar(formaPagamentoId));
     }
 
 

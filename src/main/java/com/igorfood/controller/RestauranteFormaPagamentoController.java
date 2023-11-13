@@ -6,11 +6,13 @@ import com.igorfood.dtos.FormaPagamentoDTO;
 import com.igorfood.modelmapper.FormaPagamentoAssembler;
 import com.igorfood.domain.services.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("igorfood/restaurantes/{id_restaurante}/formas-pagamento")
@@ -28,7 +30,10 @@ public class RestauranteFormaPagamentoController {
         Restaurante restaurante = restauranteService.getRestaurante(restauranteId);
         Set<FormaPagamento> formasPagamento = restaurante.getFormaPagamentos();
         List<FormaPagamentoDTO> formasPagamentoDTO = (List<FormaPagamentoDTO>) formaPagamentoAssembler.toCollectionDTO(formasPagamento);
-        return ResponseEntity.ok(formasPagamentoDTO);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(formasPagamentoDTO);
     }
 
     @DeleteMapping("/{id_formaPagamento}")
